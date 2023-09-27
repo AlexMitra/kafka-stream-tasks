@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  zookeeper:
+    image: ${ZOOKEEPER_IMAGE}
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka1:
+    image: ${KAFKA_IMAGE}
+    container_name: kafka1
+    ports:
+      - "8097:8097"
+      - "29097:29097"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka1:19092,EXTERNAL://localhost:8097,DOCKER://host.docker.internal:29097
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: ${REPLICATION_FACTOR}
+#      KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
+#      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
+      KAFKA_CREATE_TOPICS: "task1-1:1:1,task1-2:1:1,task2:1:1,task3-1:1:1,task3-2:1:1,task4:1:1"
+    depends_on:
+      - zookeeper
