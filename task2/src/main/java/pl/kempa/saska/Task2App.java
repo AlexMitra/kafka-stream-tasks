@@ -47,10 +47,12 @@ public class Task2App {
 		KStream<Integer, String> wordsWithLengthStream = inputTopicStream.filterNot(((k, v) -> v == null))
 				.flatMapValues(value -> List.of(value.split("\\W+")))
 				.selectKey((key, value) -> value.length());
-		wordsWithLengthStream.foreach((k, v) -> log.info("[TOPIC2]: " + v));
+		wordsWithLengthStream.foreach((k, v) -> log.info("[TOPIC2]: " + transformKeyValues(k, v)));
 
-		KStream<Integer, String>[] branches = wordsWithLengthStream.branch((key, value) -> value.length() <= 10,
-				(key, value) -> value.length() > 10);
+		KStream<Integer, String>[] branches = wordsWithLengthStream.branch(
+				(key, value) -> value.length() <= 10,
+				(key, value) -> value.length() > 10
+		);
 		return Map.of("words-short", branches[0], "words-long", branches[1]);
 	}
 
@@ -69,7 +71,14 @@ public class Task2App {
 	public Optional<KStream<Integer, String>> mergedStreams(
 			@Qualifier("filterWordsWithLetterA") Map<String, KStream<Integer, String>> filteredStreamsMap) {
 		var mergedStream = filteredStreamsMap.values().stream().reduce(KStream::merge);
-		mergedStream.ifPresent(ks -> ks.foreach((k, v) -> log.info("[TOPIC2 MERGED]: " + v)));
+		mergedStream.ifPresent(ks -> ks.foreach(
+				(k, v) -> log.info("[TOPIC2 MERGED]: " + transformKeyValues(k, v))
+				)
+		);
 		return mergedStream;
+	}
+
+	private String transformKeyValues(Integer key, String value) {
+		return String.format("{ \"key\":%d, \"value\":\"%s\" }", key, value);
 	}
 }
