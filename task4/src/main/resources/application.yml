@@ -1,0 +1,16 @@
+server:
+  port: 8084
+
+spring:
+  kafka:
+    streams:
+      application-id: kafka-streams-learning-task-4
+      bootstrap-servers: localhost:8097
+      properties:
+        default:
+          deserialization:
+            exception: handler=org.apache.kafka.streams.errors.LogAndContinueExceptionHandler
+
+app:
+  kafka-topics:
+    topic4: task4
