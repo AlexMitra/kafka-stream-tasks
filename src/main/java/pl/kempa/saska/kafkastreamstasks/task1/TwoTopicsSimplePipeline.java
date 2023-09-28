@@ -22,7 +22,7 @@ public class TwoTopicsSimplePipeline {
 	private String topic1_2;
 
 	@Autowired
-	void buildTwoTopicsSimplePipeline(StreamsBuilder streamsBuilder) {
+	public void buildTwoTopicsSimplePipeline(StreamsBuilder streamsBuilder) {
 		KStream<String, String> inputTopicStream = streamsBuilder
 				.stream(topic1_1, Consumed.with(Serdes.String(), Serdes.String()));
 
