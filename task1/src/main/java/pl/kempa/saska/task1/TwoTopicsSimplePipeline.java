@@ -1,4 +1,4 @@
-package pl.kempa.saska.kafkastreamstasks.task1;
+package pl.kempa.saska.task1;
 
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;

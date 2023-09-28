@@ -1,10 +1,10 @@
-package pl.kempa.saska.kafkastreamstasks;
+package pl.kempa.saska.task1;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class KafkaStreamsTasksAppTests {
+class Task1AppTests {
 
 	@Test
 	void contextLoads() {
