@@ -4,7 +4,7 @@ server:
 spring:
   kafka:
     streams:
-      application-id: kafka-streams-learning-tasks
+      application-id: kafka-streams-learning-task-1
       bootstrap-servers: localhost:8097
 
 app:
