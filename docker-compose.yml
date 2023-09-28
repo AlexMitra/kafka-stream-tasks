@@ -19,8 +19,28 @@ services:
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka1:19092,EXTERNAL://localhost:8097,DOCKER://host.docker.internal:29097
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: ${REPLICATION_FACTOR}
-#      KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
-#      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
-      KAFKA_CREATE_TOPICS: "task1-1:1:1,task1-2:1:1,task2:1:1,task3-1:1:1,task3-2:1:1,task4:1:1"
     depends_on:
       - zookeeper
+
+  init-kafka:
+    image: ${KAFKA_IMAGE}
+    depends_on:
+      - zookeeper
+      - kafka1
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+      kafka-topics --bootstrap-server kafka1:29097 --list
+      
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server kafka1:29097 --create --if-not-exists --topic task1-1 --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka1:29097 --create --if-not-exists --topic task1-2 --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka1:29097 --create --if-not-exists --topic task2 --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka1:29097 --create --if-not-exists --topic task3-1 --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka1:29097 --create --if-not-exists --topic task3-2 --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka1:29097 --create --if-not-exists --topic task4 --replication-factor 1 --partitions 1
+
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server kafka1:29097 --list
+      "

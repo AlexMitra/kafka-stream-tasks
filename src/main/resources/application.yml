@@ -1,1 +1,22 @@
+server:
+  port: 8081
+
+spring:
+  kafka:
+    streams:
+      application-id: kafka-streams-learning-tasks
+      bootstrap-servers: localhost:8097
+
+app:
+  kafka-topics:
+    topic1-1: task1-1
+    topic1-2: task1-2
+    topic2: task2
+    topic3-1: task3-1
+    topic3-2: task3-2
+    topic4: task4
+
+#logging:
+#  level:
+#    root: WARN
 
